@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Mesh.h"
 
 namespace dae {
 
@@ -17,6 +18,17 @@ namespace dae {
 		{
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
+
+			//Create some data for out mesh
+			std::vector<Vertex_PosCol> vertices{
+				{{0.f,.5f,.5f},		{ 1.f, 0.f, 0.f }},
+				{{.5f,-.5f,.5f},	{ 0.f, 0.f, 1.f }},
+				{{-.5f,-.5f,.5f},	{ 0.f, 1.f, 0.f }},
+			};
+
+			std::vector<uint32_t> indices{ 0,1,2 };
+
+			m_pMesh = new Mesh(m_pDevice, vertices, indices);
 		}
 		else
 		{
@@ -26,6 +38,8 @@ namespace dae {
 
 	Renderer::~Renderer()
 	{
+		if (m_pMesh) delete m_pMesh;
+
 		if (m_pRenderTargetView) m_pRenderTargetView->Release();
 		if (m_pRenderTargetBuffer) m_pRenderTargetBuffer->Release();
 
@@ -59,7 +73,7 @@ namespace dae {
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		//2. SET PIPELINE + INVOKE DRAWCALLS (= RENDER)
-		//...
+		m_pMesh->Render(m_pDeviceContext);
 
 		//3. PRESENT BACKBUFFER (SWAP)
 		m_pSwapChain->Present(0, 0);
