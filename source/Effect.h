@@ -24,9 +24,9 @@ namespace dae
 		//---------------------------
 		static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile);
 
-		ID3DX11Effect* GetEffect() { return m_pEffect; }
-		ID3DX11EffectTechnique* GetTechnique() { return m_pTechnique; }
-		ID3D11InputLayout* GetInputLayout() { return m_pInputLayout; }
+		ID3DX11Effect* GetEffect() const { return m_pEffect; }
+		ID3DX11EffectTechnique* GetTechnique() const { return m_pTechnique; }
+		ID3D11InputLayout* GetInputLayout() const { return m_pInputLayout; }
 
 
 	private:

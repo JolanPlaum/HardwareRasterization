@@ -64,7 +64,7 @@ Mesh::~Mesh()
 //-----------------------------------------------------------------
 // Public Member Functions
 //-----------------------------------------------------------------
-void Mesh::Render(ID3D11DeviceContext* pDeviceContext)
+void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 {
 	//1. Set Primitive Topology
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

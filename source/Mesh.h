@@ -4,6 +4,7 @@
 
 namespace dae
 {
+	// Forward Declarations
 	class Effect;
 
 	// Class Declaration
@@ -11,7 +12,7 @@ namespace dae
 	{
 	public:
 		// Constructors and Destructor
-		Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
+		explicit Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
 		~Mesh();
 
 		// Copy and Move semantics
@@ -23,7 +24,7 @@ namespace dae
 		//---------------------------
 		// Public Member Functions
 		//---------------------------
-		void Render(ID3D11DeviceContext* pDeviceContext);
+		void Render(ID3D11DeviceContext* pDeviceContext) const;
 
 
 	private:

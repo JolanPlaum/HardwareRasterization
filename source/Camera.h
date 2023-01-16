@@ -3,6 +3,8 @@
 
 namespace dae
 {
+	// Forward Declarations
+	
 	// Class Declaration
 	class Camera final
 	{
@@ -26,9 +28,9 @@ namespace dae
 		void SetFovAngle(float fovAngle);
 		void SetAspectRatio(float aspectRatio);
 
-		Matrix GetInverseViewMatrix() { return m_InvViewMatrix; }
-		Matrix GetViewMatrix() { return m_ViewMatrix; }
-		Matrix GetProjectionMatrix() { return m_ProjectionMatrix; }
+		Matrix GetInverseViewMatrix() const { return m_InvViewMatrix; }
+		Matrix GetViewMatrix() const { return m_ViewMatrix; }
+		Matrix GetProjectionMatrix() const { return m_ProjectionMatrix; }
 	
 	
 	private:
