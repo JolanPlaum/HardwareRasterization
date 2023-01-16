@@ -5,7 +5,7 @@ struct SDL_Surface;
 
 namespace dae
 {
-	class Mesh;
+	class Scene;
 
 	class Renderer final
 	{
@@ -29,7 +29,7 @@ namespace dae
 
 		bool m_IsInitialized{ false };
 
-		Mesh* m_pMesh{};
+		Scene* m_pScene{};
 
 		//DIRECTX
 		HRESULT InitializeDirectX(IDXGIFactory1*& pDxgiFactory);
@@ -44,5 +44,8 @@ namespace dae
 
 		ID3D11Texture2D* m_pRenderTargetBuffer{};
 		ID3D11RenderTargetView* m_pRenderTargetView{};
+
+		//SCENES
+		Scene* Scene_1();
 	};
 }

@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Scene.h"
+#include "Camera.h"
 #include "Mesh.h"
 
 namespace dae {
@@ -19,16 +21,7 @@ namespace dae {
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
 
-			//Create some data for out mesh
-			std::vector<Vertex_PosCol> vertices{
-				{{0.f,.5f,.5f},		{ 1.f, 0.f, 0.f }},
-				{{.5f,-.5f,.5f},	{ 0.f, 0.f, 1.f }},
-				{{-.5f,-.5f,.5f},	{ 0.f, 1.f, 0.f }},
-			};
-
-			std::vector<uint32_t> indices{ 0,1,2 };
-
-			m_pMesh = new Mesh(m_pDevice, vertices, indices);
+			m_pScene = Scene_1();
 		}
 		else
 		{
@@ -38,7 +31,7 @@ namespace dae {
 
 	Renderer::~Renderer()
 	{
-		if (m_pMesh) delete m_pMesh;
+		if (m_pScene) delete m_pScene;
 
 		if (m_pRenderTargetView) m_pRenderTargetView->Release();
 		if (m_pRenderTargetBuffer) m_pRenderTargetBuffer->Release();
@@ -59,7 +52,7 @@ namespace dae {
 
 	void Renderer::Update(const Timer* pTimer)
 	{
-
+		m_pScene->Update(pTimer);
 	}
 
 	void Renderer::Render() const
@@ -73,7 +66,7 @@ namespace dae {
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		//2. SET PIPELINE + INVOKE DRAWCALLS (= RENDER)
-		m_pMesh->Render(m_pDeviceContext);
+		m_pScene->Render(m_pDeviceContext);
 
 		//3. PRESENT BACKBUFFER (SWAP)
 		m_pSwapChain->Present(0, 0);
@@ -207,4 +200,25 @@ namespace dae {
 
 		return result;
 	}
+
+#pragma region SCENES
+	Scene* Renderer::Scene_1()
+	{
+		//Instantiate the scene
+		Scene* scene = new Scene(Camera({ 0.f,0.f,-10.f }, 45.f, m_Width / (float)m_Height));
+
+		//Create some data for our mesh
+		std::vector<Vertex_PosCol> vertices{
+			{{  0.f,  3.f, 2.f },		{ 1.f, 0.f, 0.f }},
+			{{  3.f, -3.f, 2.f },		{ 0.f, 0.f, 1.f }},
+			{{ -3.f, -3.f, 2.f },		{ 0.f, 1.f, 0.f }},
+		};
+		std::vector<uint32_t> indices{ 0,1,2 };
+
+		//Add mesh to the scene
+		scene->AddMesh(m_pDevice, vertices, indices);
+
+		return scene;
+	}
+#pragma endregion
 }
