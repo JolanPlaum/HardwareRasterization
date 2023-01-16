@@ -26,6 +26,8 @@ namespace dae
 		//---------------------------
 		void Render(ID3D11DeviceContext* pDeviceContext) const;
 
+		Effect* GetEffect() const { return m_pEffect; }
+
 
 	private:
 		// Member variables

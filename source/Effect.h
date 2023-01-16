@@ -26,6 +26,7 @@ namespace dae
 
 		ID3DX11Effect* GetEffect() const { return m_pEffect; }
 		ID3DX11EffectTechnique* GetTechnique() const { return m_pTechnique; }
+		ID3DX11EffectMatrixVariable* GetWorldViewProjectionVariable() const { return m_pMatWorldViewProjVariable; }
 		ID3D11InputLayout* GetInputLayout() const { return m_pInputLayout; }
 
 

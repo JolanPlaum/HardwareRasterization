@@ -15,10 +15,10 @@ namespace dae
 		~Camera();
 		
 		// Copy and Move semantics
-		Camera(const Camera& other)					= delete;
-		Camera& operator=(const Camera& other)		= delete;
-		Camera(Camera&& other) noexcept				= delete;
-		Camera& operator=(Camera&& other) noexcept	= delete;
+		Camera(const Camera& other)					= default;
+		Camera& operator=(const Camera& other)		= default;
+		Camera(Camera&& other) noexcept				= default;
+		Camera& operator=(Camera&& other) noexcept	= default;
 	
 		//---------------------------
 		// Public Member Functions
