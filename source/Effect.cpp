@@ -19,6 +19,10 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 	if (!m_pTechnique->IsValid())
 		std::wcout << L"Technique not valid\n";
 
+	m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
+	if (!m_pMatWorldViewProjVariable->IsValid())
+		std::wcout << L"Matrix Variable not valid\n";
+
 
 	//Create Vertex Layout
 	static constexpr uint32_t numElements{ 2 };

@@ -3,12 +3,14 @@
 
 namespace dae
 {
+	// Forward Declarations
+	
 	// Class Declaration
 	class Effect final
 	{
 	public:
 		// Constructors and Destructor
-		Effect(ID3D11Device* pDevice, const std::wstring& assetFile);
+		explicit Effect(ID3D11Device* pDevice, const std::wstring& assetFile);
 		~Effect();
 
 		// Copy and Move semantics
@@ -31,6 +33,7 @@ namespace dae
 		// Member variables
 		ID3DX11Effect* m_pEffect{};
 		ID3DX11EffectTechnique* m_pTechnique{};
+		ID3DX11EffectMatrixVariable* m_pMatWorldViewProjVariable{};
 
 		ID3D11InputLayout* m_pInputLayout{};
 
