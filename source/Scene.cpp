@@ -53,7 +53,7 @@ void Scene::Update(const Timer* pTimer)
 	//Update effects for all meshes
 	for (Mesh* pMesh : m_Meshes)
 	{
-		pMesh->GetEffect()->GetWorldViewProjectionVariable()->SetMatrix(reinterpret_cast<float*>(&worldViewProj));
+		pMesh->GetEffect()->SetWorldViewProjectionMatrix(worldViewProj);
 	}
 }
 

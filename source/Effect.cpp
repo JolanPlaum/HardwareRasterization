@@ -60,6 +60,8 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 //-----------------------------------------------------------------
 Effect::~Effect()
 {
+	if (m_pMatWorldViewProjVariable) m_pMatWorldViewProjVariable->Release();
+
 	if (m_pInputLayout) m_pInputLayout->Release();
 	if (m_pTechnique) m_pTechnique->Release();
 	if (m_pEffect) m_pEffect->Release();
@@ -118,6 +120,14 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 	}
 
 	return pEffect;
+}
+
+void Effect::SetWorldViewProjectionMatrix(Matrix& pMatrix)
+{
+	if (m_pMatWorldViewProjVariable)
+		m_pMatWorldViewProjVariable->SetMatrix(reinterpret_cast<float*>(&pMatrix));
+	else
+		std::wcout << L"SetWorldViewProjectionMatrix failed\n";
 }
 
 
