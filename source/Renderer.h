@@ -47,5 +47,6 @@ namespace dae
 
 		//SCENES
 		Scene* Scene_1();
+		Scene* Scene_2();
 	};
 }

@@ -3,6 +3,8 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "Effect.h"
+#include "Texture.h"
 
 namespace dae {
 
@@ -21,7 +23,7 @@ namespace dae {
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
 
-			m_pScene = Scene_1();
+			m_pScene = Scene_2();
 		}
 		else
 		{
@@ -217,6 +219,36 @@ namespace dae {
 
 		//Add mesh to the scene
 		scene->AddMesh(m_pDevice, vertices, indices);
+
+		return scene;
+	}
+
+	Scene* Renderer::Scene_2()
+	{
+		//Instantiate the scene
+		Scene* scene = new Scene(Camera({ 0.f,0.f,-10.f }, 45.f, m_Width / (float)m_Height));
+
+		//Create some data for our mesh
+		std::vector<Vertex_PosTex> vertices{
+				{ {	-3,	3,	-2 }, { 0.f,	0.f } },
+				{ {	0,	3,	-2 }, { .5f,	0.f } },
+				{ { 3,	3,	-2 }, { 1.f,	0.f } },
+				{ {	-3,	0,	-2 }, { 0.f,	.5f } },
+				{ { 0,	0,	-2 }, { .5f,	.5f } },
+				{ { 3,	0,	-2 }, { 1.f,	.5f } },
+				{ {	-3,	-3,	-2 }, { 0.f,	1.f } },
+				{ { 0,	-3,	-2 }, { .5f,	1.f } },
+				{ { 3,	-3,	-2 }, { 1.f,	1.f } }
+		};
+		std::vector<uint32_t>indices{
+			3, 0, 1,	1, 4, 3,	4, 1, 2,
+			2, 5, 4,	6, 3, 4,	4, 7, 6,
+			7, 4, 5,	5, 8, 7
+		};
+
+		//Add mesh to the scene
+		Mesh* pMesh = scene->AddMesh(m_pDevice, vertices, indices);
+		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/uv_grid_2.png"));
 
 		return scene;
 	}
