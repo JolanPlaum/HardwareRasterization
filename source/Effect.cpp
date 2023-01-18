@@ -3,6 +3,7 @@
 //-----------------------------------------------------------------
 #include "pch.h"
 #include "Effect.h"
+#include "Texture.h"
 #include <cassert>
 
 using namespace dae;
@@ -11,7 +12,7 @@ using namespace dae;
 //-----------------------------------------------------------------
 // Constructors
 //-----------------------------------------------------------------
-Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
+Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile, bool usesTexture)
 {
 	m_pEffect = LoadEffect(pDevice, assetFile);
 
@@ -23,20 +24,22 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 	if (!m_pMatWorldViewProjVariable->IsValid())
 		std::wcout << L"Matrix Variable not valid\n";
 
+	m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
+	if (!m_pDiffuseMapVariable->IsValid())
+		std::wcout << L"Shader Resource Variable not valid\n";
+
 
 	//Create Vertex Layout
-	static constexpr uint32_t numElements{ 2 };
-	D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
-
-	vertexDesc[0].SemanticName = "POSITION";
-	vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	vertexDesc[0].AlignedByteOffset = 0;
-	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-
-	vertexDesc[1].SemanticName = "COLOR";
-	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	vertexDesc[1].AlignedByteOffset = 12;
-	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+	uint32_t numElements{ 2 };
+	D3D11_INPUT_ELEMENT_DESC* vertexDesc{};
+	if (usesTexture)
+	{
+		numElements = CreateTextureVertexLayout(vertexDesc);
+	}
+	else
+	{
+		numElements = CreateColorVertexLayout(vertexDesc);
+	}
 
 
 	//Create Input Layout
@@ -52,6 +55,8 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 
 	if (FAILED(result))
 		assert(false);
+
+	delete vertexDesc;
 }
 
 
@@ -60,6 +65,8 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 //-----------------------------------------------------------------
 Effect::~Effect()
 {
+	if (m_pDiffuseMapVariable) m_pDiffuseMapVariable->Release();
+
 	if (m_pMatWorldViewProjVariable) m_pMatWorldViewProjVariable->Release();
 
 	if (m_pInputLayout) m_pInputLayout->Release();
@@ -122,12 +129,67 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 	return pEffect;
 }
 
+uint32_t Effect::CreateColorVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc)
+{
+	static constexpr uint32_t numElements{ 2 };
+	vertexDesc = new D3D11_INPUT_ELEMENT_DESC[numElements]{};
+
+	vertexDesc[0].SemanticName = "POSITION";
+	vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexDesc[0].AlignedByteOffset = 0;
+	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	vertexDesc[1].SemanticName = "COLOR";
+	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexDesc[1].AlignedByteOffset = 12;
+	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	return numElements;
+}
+
+uint32_t Effect::CreateTextureVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc)
+{
+	static constexpr uint32_t numElements{ 2 };
+	vertexDesc = new D3D11_INPUT_ELEMENT_DESC[numElements]{};
+
+	vertexDesc[0].SemanticName = "POSITION";
+	vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexDesc[0].AlignedByteOffset = 0;
+	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	vertexDesc[1].SemanticName = "TEXCOORD";
+	vertexDesc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	vertexDesc[1].AlignedByteOffset = 12;
+	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	return numElements;
+}
+
 void Effect::SetWorldViewProjectionMatrix(Matrix& pMatrix)
 {
 	if (m_pMatWorldViewProjVariable)
 		m_pMatWorldViewProjVariable->SetMatrix(reinterpret_cast<float*>(&pMatrix));
 	else
 		std::wcout << L"SetWorldViewProjectionMatrix failed\n";
+}
+
+void Effect::SetDiffuseMap(Texture* pDiffuseTexture)
+{
+	if (pDiffuseTexture)
+	{
+		if (m_pDiffuseMapVariable)
+		{
+			const HRESULT result = m_pDiffuseMapVariable->SetResource(pDiffuseTexture->GetResourceView());
+			if (FAILED(result))
+				assert(false);
+		}
+		else
+			std::wcout << L"SetDiffuseMap failed\n";
+	}
+	else
+	{
+		std::wcout << L"SetDiffuseMap failed: nullptr given\n";
+	}
 }
 
 

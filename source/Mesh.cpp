@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Effect.h"
+#include "Texture.h"
 
 using namespace dae;
 
@@ -14,13 +15,52 @@ using namespace dae;
 Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
 	//Create Effect Instance
-	m_pEffect = new Effect(pDevice, L"Resources/PosCol3D.fx");
+	m_IsTextured = false;
+	m_pEffect = new Effect(pDevice, L"Resources/PosCol3D.fx", m_IsTextured);
 
 
 	//Create Vertex Buffer
 	D3D11_BUFFER_DESC bd = {};
 	bd.Usage = D3D11_USAGE_IMMUTABLE;
 	bd.ByteWidth = sizeof(Vertex_PosCol) * static_cast<uint32_t>(vertices.size());
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+
+	D3D11_SUBRESOURCE_DATA initData = {};
+	initData.pSysMem = vertices.data();
+
+	HRESULT result = pDevice->CreateBuffer(&bd, &initData, &m_pVertexBuffer);
+	if (FAILED(result))
+		return;
+
+
+	//Create Index Buffer
+	m_NumIndices = static_cast<uint32_t>(indices.size());
+	bd.Usage = D3D11_USAGE_IMMUTABLE;
+	bd.ByteWidth = sizeof(uint32_t) * m_NumIndices;
+	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+
+	initData.pSysMem = indices.data();
+
+	result = pDevice->CreateBuffer(&bd, &initData, &m_pIndexBuffer);
+	if (FAILED(result))
+		return;
+}
+
+Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices)
+{
+	//Create Effect Instance
+	m_IsTextured = true;
+	m_pEffect = new Effect(pDevice, L"Resources/PosTex3D.fx", m_IsTextured);
+
+
+	//Create Vertex Buffer
+	D3D11_BUFFER_DESC bd = {};
+	bd.Usage = D3D11_USAGE_IMMUTABLE;
+	bd.ByteWidth = sizeof(Vertex_PosTex) * static_cast<uint32_t>(vertices.size());
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -58,6 +98,8 @@ Mesh::~Mesh()
 	m_pVertexBuffer->Release();
 
 	delete m_pEffect;
+
+	delete m_pDiffuseTexture;
 }
 
 
@@ -73,9 +115,18 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 	pDeviceContext->IASetInputLayout(m_pEffect->GetInputLayout());
 
 	//3. Set Vertex Buffer
-	constexpr UINT stride = sizeof(Vertex_PosCol);
-	constexpr UINT offset = 0;
-	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+	if (m_IsTextured)
+	{
+		constexpr UINT stride = sizeof(Vertex_PosTex);
+		constexpr UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+	}
+	else
+	{
+		constexpr UINT stride = sizeof(Vertex_PosCol);
+		constexpr UINT offset = 0;
+		pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+	}
 
 	//4. Set Index Buffer
 	pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
@@ -88,6 +139,12 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 		m_pEffect->GetTechnique()->GetPassByIndex(p)->Apply(0, pDeviceContext);
 		pDeviceContext->DrawIndexed(m_NumIndices, 0, 0);
 	}
+}
+
+void Mesh::SetDiffuseTexture(Texture* pTexture)
+{
+	m_pDiffuseTexture = pTexture;
+	m_pEffect->SetDiffuseMap(m_pDiffuseTexture);
 }
 
 
