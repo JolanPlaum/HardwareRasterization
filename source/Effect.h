@@ -27,6 +27,8 @@ namespace dae
 		uint32_t CreateColorVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc);
 		uint32_t CreateTextureVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc);
 
+		void ToggleTechnique();
+
 		void SetWorldViewProjectionMatrix(Matrix& pMatrix);
 		void SetDiffuseMap(Texture* pDiffuseTexture);
 
@@ -38,12 +40,25 @@ namespace dae
 	private:
 		// Member variables
 		ID3DX11Effect* m_pEffect{};
-		ID3DX11EffectTechnique* m_pTechnique{};
 		ID3DX11EffectMatrixVariable* m_pMatWorldViewProjVariable{};
-
 		ID3D11InputLayout* m_pInputLayout{};
 
+		ID3DX11EffectTechnique* m_pTechnique{};
+		ID3DX11EffectTechnique* m_pTechniquePoint{};
+		ID3DX11EffectTechnique* m_pTechniqueLinear{};
+		ID3DX11EffectTechnique* m_pTechniqueAnisotropic{};
+
 		ID3DX11EffectShaderResourceVariable* m_pDiffuseMapVariable{};
+
+		enum class TechniqueType
+		{
+			Point,
+			Linear,
+			Anisotropic,
+
+			//@END
+			End
+		} m_TechniqueType;
 
 		//---------------------------
 		// Private Member Functions

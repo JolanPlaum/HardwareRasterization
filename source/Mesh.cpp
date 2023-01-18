@@ -141,6 +141,11 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 	}
 }
 
+void Mesh::ToggleSamplerState() const
+{
+	m_pEffect->ToggleTechnique();
+}
+
 void Mesh::SetDiffuseTexture(Texture* pTexture)
 {
 	m_pDiffuseTexture = pTexture;

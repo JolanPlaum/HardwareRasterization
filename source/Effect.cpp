@@ -16,9 +16,17 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile, bool usesTe
 {
 	m_pEffect = LoadEffect(pDevice, assetFile);
 
-	m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
-	if (!m_pTechnique->IsValid())
-		std::wcout << L"Technique not valid\n";
+	m_pTechniquePoint = m_pEffect->GetTechniqueByName("DefaultTechnique");
+	if (!m_pTechniquePoint->IsValid())
+		std::wcout << L"DefaultTechnique not valid\n";
+
+	m_pTechniqueLinear = m_pEffect->GetTechniqueByName("LinearTechnique");
+	if (!m_pTechniqueLinear->IsValid())
+		std::wcout << L"LinearTechnique not valid\n";
+
+	m_pTechniqueAnisotropic = m_pEffect->GetTechniqueByName("AnisotropicTechnique");
+	if (!m_pTechniqueAnisotropic->IsValid())
+		std::wcout << L"AnisotropicTechnique not valid\n";
 
 	m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 	if (!m_pMatWorldViewProjVariable->IsValid())
@@ -27,6 +35,8 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile, bool usesTe
 	m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
 	if (!m_pDiffuseMapVariable->IsValid())
 		std::wcout << L"Shader Resource Variable not valid\n";
+
+	m_pTechnique = m_pTechniquePoint;
 
 
 	//Create Vertex Layout
@@ -163,6 +173,27 @@ uint32_t Effect::CreateTextureVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc
 	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	return numElements;
+}
+
+void Effect::ToggleTechnique()
+{
+	m_TechniqueType = TechniqueType(((int)m_TechniqueType + 1) % (int)TechniqueType::End);
+
+	switch (m_TechniqueType)
+	{
+	case TechniqueType::Point:
+		m_pTechnique = m_pTechniquePoint;
+		std::wcout << L"POINT Sampler State active\n";
+		break;
+	case TechniqueType::Linear:
+		m_pTechnique = m_pTechniqueLinear;
+		std::wcout << L"LINEAR Sampler State active\n";
+		break;
+	case TechniqueType::Anisotropic:
+		m_pTechnique = m_pTechniqueAnisotropic;
+		std::wcout << L"ANISOTROPIC Sampler State active\n";
+		break;
+	}
 }
 
 void Effect::SetWorldViewProjectionMatrix(Matrix& pMatrix)

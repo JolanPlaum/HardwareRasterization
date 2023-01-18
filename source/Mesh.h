@@ -28,6 +28,8 @@ namespace dae
 		//---------------------------
 		void Render(ID3D11DeviceContext* pDeviceContext) const;
 
+		void ToggleSamplerState() const;
+
 		void SetDiffuseTexture(Texture* pTexture);
 
 		Effect* GetEffect() const { return m_pEffect; }

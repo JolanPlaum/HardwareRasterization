@@ -74,6 +74,11 @@ namespace dae {
 		m_pSwapChain->Present(0, 0);
 	}
 
+	void Renderer::ToggleSamplerStates() const
+	{
+		m_pScene->ToggleSamplerState();
+	}
+
 	HRESULT Renderer::InitializeDirectX(IDXGIFactory1*& pDxgiFactory)
 	{
 		//1. Create Device & Context

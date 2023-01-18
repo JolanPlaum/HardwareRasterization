@@ -65,6 +65,14 @@ void Scene::Render(ID3D11DeviceContext* pDeviceContext)
 	}
 }
 
+void Scene::ToggleSamplerState() const
+{
+	for (Mesh* pMesh : m_Meshes)
+	{
+		pMesh->ToggleSamplerState();
+	}
+}
+
 Mesh* Scene::AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
 	m_Meshes.emplace_back(new Mesh(pDevice, vertices, indices));

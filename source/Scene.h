@@ -29,6 +29,8 @@ namespace dae
 		void Update(const Timer* pTimer);
 		void Render(ID3D11DeviceContext* pDeviceContext);
 
+		void ToggleSamplerState() const;
+
 		Mesh* AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
 		Mesh* AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices);
 	

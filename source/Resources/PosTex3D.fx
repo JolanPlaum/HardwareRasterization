@@ -11,6 +11,20 @@ SamplerState gSamPoint
 	AddressV = Wrap; // Mirror, Clamp, Border or Wrap
 };
 
+SamplerState gSamLinear
+{
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap; // Mirror, Clamp, Border or Wrap
+	AddressV = Wrap; // Mirror, Clamp, Border or Wrap
+};
+
+SamplerState gSamAnisotropic
+{
+	Filter = ANISOTROPIC;
+	AddressU = Wrap; // Mirror, Clamp, Border or Wrap
+	AddressV = Wrap; // Mirror, Clamp, Border or Wrap
+};
+
 //---------------------------------------------------
 // Input/Output Structs
 //---------------------------------------------------
@@ -45,6 +59,16 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 	return gDiffuseMap.Sample(gSamPoint, input.TextureUV);
 }
 
+float4 PS_LIN(VS_OUTPUT input) : SV_TARGET
+{
+	return gDiffuseMap.Sample(gSamLinear, input.TextureUV);
+}
+
+float4 PS_ANI(VS_OUTPUT input) : SV_TARGET
+{
+	return gDiffuseMap.Sample(gSamAnisotropic, input.TextureUV);
+}
+
 //---------------------------------------------------
 // Technique
 //---------------------------------------------------
@@ -55,5 +79,25 @@ technique11 DefaultTechnique
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS()));
+	}
+}
+
+technique11 LinearTechnique
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS_LIN()));
+	}
+}
+
+technique11 AnisotropicTechnique
+{
+	pass P0
+	{
+		SetVertexShader(CompileShader(vs_5_0, VS()));
+		SetGeometryShader(NULL);
+		SetPixelShader(CompileShader(ps_5_0, PS_ANI()));
 	}
 }
