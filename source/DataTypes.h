@@ -8,9 +8,9 @@ namespace dae
 		ColorRGB color{ colors::White };
 	};
 
-	struct Vertex_PosCol_Out
+	struct Vertex_PosTex
 	{
-		Vector4 position{};
-		ColorRGB color{ colors::White };
+		Vector3 position{};
+		Vector2 uv{};
 	};
 }
