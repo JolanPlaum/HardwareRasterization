@@ -53,6 +53,7 @@ void Scene::Update(const Timer* pTimer)
 	//Update effects for all meshes
 	for (Mesh* pMesh : m_Meshes)
 	{
+		worldViewProj = pMesh->GetWorldMatrix() * worldViewProj;
 		pMesh->GetEffect()->SetWorldViewProjectionMatrix(worldViewProj);
 	}
 }

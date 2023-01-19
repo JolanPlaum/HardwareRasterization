@@ -29,10 +29,16 @@ namespace dae
 		void Render(ID3D11DeviceContext* pDeviceContext) const;
 
 		void ToggleSamplerState() const;
+		void Translate(const Vector3& translation);
+		void Rotate(const Vector3& rotation);
 
 		void SetDiffuseTexture(Texture* pTexture);
+		void SetPosition(float x, float y, float z);
+		void SetRotation(float pitch, float yaw, float roll);
+		void SetScale(const Vector3& scale);
 
 		Effect* GetEffect() const { return m_pEffect; }
+		Matrix GetWorldMatrix() const { return Matrix::CreateTransform(m_Position, m_Rotation, m_Scale); }
 
 
 	private:
@@ -46,6 +52,10 @@ namespace dae
 		uint32_t m_NumIndices{};
 
 		Texture* m_pDiffuseTexture{};
+
+		Vector3 m_Position{ 0.f, 0.f, 0.f };
+		Vector3 m_Rotation{ 0.f, 0.f, 0.f };
+		Vector3 m_Scale{ 1.f, 1.f, 1.f };
 
 		//---------------------------
 		// Private Member Functions

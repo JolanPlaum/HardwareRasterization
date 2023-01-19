@@ -146,10 +146,35 @@ void Mesh::ToggleSamplerState() const
 	m_pEffect->ToggleTechnique();
 }
 
+void Mesh::Translate(const Vector3& translation)
+{
+	m_Position += translation;
+}
+
+void Mesh::Rotate(const Vector3& rotation)
+{
+	m_Rotation += rotation;
+}
+
 void Mesh::SetDiffuseTexture(Texture* pTexture)
 {
 	m_pDiffuseTexture = pTexture;
 	m_pEffect->SetDiffuseMap(m_pDiffuseTexture);
+}
+
+void Mesh::SetPosition(float x, float y, float z)
+{
+	m_Rotation = Vector3{ x, y, z };
+}
+
+void Mesh::SetRotation(float pitch, float yaw, float roll)
+{
+	m_Rotation = Vector3{ pitch, yaw, roll };
+}
+
+void Mesh::SetScale(const Vector3& scale)
+{
+	m_Scale = scale;
 }
 
 
