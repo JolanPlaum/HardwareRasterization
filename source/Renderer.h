@@ -6,6 +6,7 @@ struct SDL_Surface;
 namespace dae
 {
 	class Scene;
+	class Mesh;
 
 	class Renderer final
 	{
@@ -32,6 +33,7 @@ namespace dae
 		bool m_IsInitialized{ false };
 
 		Scene* m_pScene{};
+		Mesh* m_pMeshRotating{};
 
 		//DIRECTX
 		HRESULT InitializeDirectX(IDXGIFactory1*& pDxgiFactory);

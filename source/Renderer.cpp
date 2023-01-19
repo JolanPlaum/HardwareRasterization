@@ -56,6 +56,11 @@ namespace dae {
 	void Renderer::Update(const Timer* pTimer)
 	{
 		m_pScene->Update(pTimer);
+
+		if (m_pMeshRotating)
+		{
+			m_pMeshRotating->Rotate({ 0.f, pTimer->GetElapsed() * PI_DIV_2, 0.f });
+		}
 	}
 
 	void Renderer::Render() const
@@ -270,8 +275,8 @@ namespace dae {
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
-		Mesh* pMesh = scene->AddMesh(m_pDevice, vertices, indices);
-		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
+		m_pMeshRotating = scene->AddMesh(m_pDevice, vertices, indices);
+		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
 
 		return scene;
 	}
