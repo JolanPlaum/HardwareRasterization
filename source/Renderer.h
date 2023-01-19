@@ -50,5 +50,6 @@ namespace dae
 		//SCENES
 		Scene* Scene_1();
 		Scene* Scene_2();
+		Scene* Scene_3(); //vehicle mesh with diffuse texture
 	};
 }

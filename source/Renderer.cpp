@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Utils.h"
 #include "Scene.h"
 #include "Camera.h"
 #include "Mesh.h"
@@ -23,7 +24,7 @@ namespace dae {
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
 
-			m_pScene = Scene_2();
+			m_pScene = Scene_3();
 		}
 		else
 		{
@@ -254,6 +255,23 @@ namespace dae {
 		//Add mesh to the scene
 		Mesh* pMesh = scene->AddMesh(m_pDevice, vertices, indices);
 		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/uv_grid_2.png"));
+
+		return scene;
+	}
+
+	Scene* Renderer::Scene_3()
+	{
+		//Instantiate the scene
+		Scene* scene = new Scene(Camera({ 0.f, 0.f, -50.f }, 45.f, m_Width / (float)m_Height));
+
+		//Create data for our mesh
+		std::vector<Vertex_PosTex> vertices{};
+		std::vector<uint32_t>indices{};
+		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
+
+		//Add mesh to the scene
+		Mesh* pMesh = scene->AddMesh(m_pDevice, vertices, indices);
+		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
 
 		return scene;
 	}
