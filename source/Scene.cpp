@@ -79,16 +79,9 @@ void Scene::ToggleSamplerState() const
 	}
 }
 
-Mesh* Scene::AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
+void Scene::AddMesh(Mesh* pMesh)
 {
-	m_Meshes.emplace_back(new Mesh(pDevice, vertices, indices));
-	return m_Meshes.back();
-}
-
-Mesh* Scene::AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices)
-{
-	m_Meshes.emplace_back(new Mesh(pDevice, vertices, indices));
-	return m_Meshes.back();
+	m_Meshes.emplace_back(pMesh);
 }
 
 

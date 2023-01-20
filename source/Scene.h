@@ -31,8 +31,7 @@ namespace dae
 
 		void ToggleSamplerState() const;
 
-		Mesh* AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
-		Mesh* AddMesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices);
+		void AddMesh(Mesh* pMesh);
 	
 	
 	private:

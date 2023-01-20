@@ -229,7 +229,7 @@ namespace dae {
 		std::vector<uint32_t> indices{ 0,1,2 };
 
 		//Add mesh to the scene
-		scene->AddMesh(m_pDevice, vertices, indices);
+		scene->AddMesh(new Mesh(m_pDevice, vertices, indices));
 
 		return scene;
 	}
@@ -258,8 +258,10 @@ namespace dae {
 		};
 
 		//Add mesh to the scene
-		Mesh* pMesh = scene->AddMesh(m_pDevice, vertices, indices);
+		Mesh* pMesh = new Mesh(m_pDevice, vertices, indices);
 		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/uv_grid_2.png"));
+
+		scene->AddMesh(pMesh);
 
 		return scene;
 	}
@@ -275,8 +277,10 @@ namespace dae {
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
-		m_pMeshRotating = scene->AddMesh(m_pDevice, vertices, indices);
+		m_pMeshRotating = new Mesh(m_pDevice, vertices, indices);
 		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
+
+		scene->AddMesh(m_pMeshRotating);
 
 		return scene;
 	}
@@ -292,11 +296,13 @@ namespace dae {
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
-		m_pMeshRotating = scene->AddMesh(m_pDevice, vertices, indices);
+		m_pMeshRotating = new Mesh(m_pDevice, vertices, indices);
 		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
 		m_pMeshRotating->SetNormalTexture(new Texture(m_pDevice, "Resources/vehicle_normal.png"));
 		m_pMeshRotating->SetSpecularTexture(new Texture(m_pDevice, "Resources/vehicle_specular.png"));
 		m_pMeshRotating->SetGlossinessTexture(new Texture(m_pDevice, "Resources/vehicle_gloss.png"));
+
+		scene->AddMesh(m_pMeshRotating);
 
 		return scene;
 	}
