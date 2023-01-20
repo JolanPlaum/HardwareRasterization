@@ -24,7 +24,7 @@ namespace dae {
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
 
-			m_pScene = Scene_4();
+			m_pScene = Scene_5();
 		}
 		else
 		{
@@ -229,7 +229,7 @@ namespace dae {
 		std::vector<uint32_t> indices{ 0,1,2 };
 
 		//Add mesh to the scene
-		scene->AddMesh(new Mesh(m_pDevice, L"PosCol3D.fx", vertices, indices));
+		scene->AddMesh(new Mesh(m_pDevice, L"Resources/PosCol3D.fx", vertices, indices));
 
 		return scene;
 	}
@@ -258,7 +258,7 @@ namespace dae {
 		};
 
 		//Add mesh to the scene
-		Mesh* pMesh = new Mesh(m_pDevice, L"PosTex3D.fx", vertices, indices);
+		Mesh* pMesh = new Mesh(m_pDevice, L"Resources/PosTex3D.fx", vertices, indices);
 		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/uv_grid_2.png"));
 
 		scene->AddMesh(pMesh);
@@ -277,7 +277,7 @@ namespace dae {
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
-		m_pMeshRotating = new Mesh(m_pDevice, L"PosTex3D.fx", vertices, indices);
+		m_pMeshRotating = new Mesh(m_pDevice, L"Resources/PosTex3D.fx", vertices, indices);
 		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
 
 		scene->AddMesh(m_pMeshRotating);
@@ -296,13 +296,47 @@ namespace dae {
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
-		m_pMeshRotating = new Mesh(m_pDevice, L"PosTex3D.fx", vertices, indices);
+		m_pMeshRotating = new Mesh(m_pDevice, L"Resources/PosTex3D.fx", vertices, indices);
 		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
 		m_pMeshRotating->SetNormalTexture(new Texture(m_pDevice, "Resources/vehicle_normal.png"));
 		m_pMeshRotating->SetSpecularTexture(new Texture(m_pDevice, "Resources/vehicle_specular.png"));
 		m_pMeshRotating->SetGlossinessTexture(new Texture(m_pDevice, "Resources/vehicle_gloss.png"));
 
 		scene->AddMesh(m_pMeshRotating);
+
+		return scene;
+	}
+
+	Scene* Renderer::Scene_5()
+	{
+		//Instantiate the scene
+		Scene* scene = new Scene(Camera({ 0.f, 0.f, -50.f }, 45.f, m_Width / (float)m_Height));
+
+		
+		//Create data for our vehicle mesh
+		std::vector<Vertex_PosTex> vertices{};
+		std::vector<uint32_t> indices{};
+		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
+
+		//Add vehicle mesh to the scene
+		Mesh* pMesh = new Mesh(m_pDevice, L"Resources/PosTex3D.fx", vertices, indices);
+		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
+		pMesh->SetNormalTexture(new Texture(m_pDevice, "Resources/vehicle_normal.png"));
+		pMesh->SetSpecularTexture(new Texture(m_pDevice, "Resources/vehicle_specular.png"));
+		pMesh->SetGlossinessTexture(new Texture(m_pDevice, "Resources/vehicle_gloss.png"));
+
+		scene->AddMesh(pMesh);
+
+
+		//Create data for our fire mesh
+		Utils::ParseOBJ("Resources/fireFX.obj", vertices, indices);
+
+		//Add mesh to the scene
+		pMesh = new Mesh(m_pDevice, L"Resources/PosDiffuse3D.fx", vertices, indices);
+		pMesh->SetDiffuseTexture(new Texture(m_pDevice, "Resources/fireFX_diffuse.png"));
+
+		scene->AddMesh(pMesh);
+
 
 		return scene;
 	}

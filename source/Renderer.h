@@ -54,5 +54,6 @@ namespace dae
 		Scene* Scene_2();
 		Scene* Scene_3(); //vehicle mesh with diffuse texture
 		Scene* Scene_4(); //vehicle mesh with all textures and shading
+		Scene* Scene_5(); //vehicle mesh and fire mesh
 	};
 }
