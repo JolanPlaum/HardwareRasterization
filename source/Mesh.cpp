@@ -12,11 +12,11 @@ using namespace dae;
 //-----------------------------------------------------------------
 // Constructors
 //-----------------------------------------------------------------
-Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
+Mesh::Mesh(ID3D11Device* pDevice, const std::wstring& assetFile, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
 	//Create Effect Instance
 	m_IsTextured = false;
-	m_pEffect = new Effect(pDevice, L"Resources/PosCol3D.fx", m_IsTextured);
+	m_pEffect = new Effect(pDevice, assetFile, m_IsTextured);
 
 
 	//Create Vertex Buffer
@@ -50,11 +50,11 @@ Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, co
 		return;
 }
 
-Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices)
+Mesh::Mesh(ID3D11Device* pDevice, const std::wstring& assetFile, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices)
 {
 	//Create Effect Instance
 	m_IsTextured = true;
-	m_pEffect = new Effect(pDevice, L"Resources/PosTex3D.fx", m_IsTextured);
+	m_pEffect = new Effect(pDevice, assetFile, m_IsTextured);
 
 
 	//Create Vertex Buffer

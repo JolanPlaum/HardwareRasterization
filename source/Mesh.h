@@ -13,8 +13,8 @@ namespace dae
 	{
 	public:
 		// Constructors and Destructor
-		explicit Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
-		explicit Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices);
+		explicit Mesh(ID3D11Device* pDevice, const std::wstring& assetFile, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
+		explicit Mesh(ID3D11Device* pDevice, const std::wstring& assetFile, const std::vector<Vertex_PosTex>& vertices, const std::vector<uint32_t>& indices);
 		~Mesh();
 
 		// Copy and Move semantics
