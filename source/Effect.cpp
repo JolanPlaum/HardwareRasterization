@@ -219,17 +219,23 @@ void Effect::ToggleTechnique()
 	switch (m_TechniqueType)
 	{
 	case TechniqueType::Point:
-		m_pTechnique = m_pTechniquePoint;
-		std::wcout << L"POINT Sampler State active\n";
-		break;
+		if (m_pTechniquePoint)
+		{
+			m_pTechnique = m_pTechniquePoint;
+			std::wcout << L"POINT Sampler State active\n";
+		} break;
 	case TechniqueType::Linear:
-		m_pTechnique = m_pTechniqueLinear;
-		std::wcout << L"LINEAR Sampler State active\n";
-		break;
+		if (m_pTechniqueLinear)
+		{
+			m_pTechnique = m_pTechniqueLinear;
+			std::wcout << L"LINEAR Sampler State active\n";
+		} break;
 	case TechniqueType::Anisotropic:
-		m_pTechnique = m_pTechniqueAnisotropic;
-		std::wcout << L"ANISOTROPIC Sampler State active\n";
-		break;
+		if (m_pTechniqueAnisotropic)
+		{
+			m_pTechnique = m_pTechniqueAnisotropic;
+			std::wcout << L"ANISOTROPIC Sampler State active\n";
+		} break;
 	}
 }
 
