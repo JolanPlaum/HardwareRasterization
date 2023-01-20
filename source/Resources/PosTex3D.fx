@@ -15,6 +15,10 @@ Texture2D gNormalMap : NormalMap;
 Texture2D gSpecularMap : SpecularMap;
 Texture2D gGlossMap : GlossinessMap;
 
+RasterizerState gRasterizerState {};
+BlendState gBlendState {};
+DepthStencilState gDepthStencilState {};
+
 SamplerState gSamPoint
 {
 	Filter = MIN_MAG_MIP_POINT;
@@ -124,7 +128,6 @@ float4 PS(VS_OUTPUT input) : SV_TARGET
 {
 	float3 finalColor = Shading(input, gSamPoint);
 	return float4(finalColor, 1.f);
-	//return float4(1.f, 1.f, 1.f, 1.f);
 }
 
 float4 PS_LIN(VS_OUTPUT input) : SV_TARGET
@@ -146,6 +149,9 @@ technique11 DefaultTechnique
 {
 	pass P0
 	{
+		SetRasterizerState(gRasterizerState);
+		SetDepthStencilState(gDepthStencilState, 0);
+		SetBlendState(gBlendState, float4(0.f, 0.f, 0.f, 0.f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS()));
@@ -156,6 +162,9 @@ technique11 LinearTechnique
 {
 	pass P0
 	{
+		SetRasterizerState(gRasterizerState);
+		SetDepthStencilState(gDepthStencilState, 0);
+		SetBlendState(gBlendState, float4(0.f, 0.f, 0.f, 0.f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_LIN()));
@@ -166,6 +175,9 @@ technique11 AnisotropicTechnique
 {
 	pass P0
 	{
+		SetRasterizerState(gRasterizerState);
+		SetDepthStencilState(gDepthStencilState, 0);
+		SetBlendState(gBlendState, float4(0.f, 0.f, 0.f, 0.f), 0xFFFFFFFF);
 		SetVertexShader(CompileShader(vs_5_0, VS()));
 		SetGeometryShader(NULL);
 		SetPixelShader(CompileShader(ps_5_0, PS_ANI()));
