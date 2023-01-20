@@ -33,6 +33,9 @@ namespace dae
 		void Rotate(const Vector3& rotation);
 
 		void SetDiffuseTexture(Texture* pTexture);
+		void SetNormalTexture(Texture* pTexture);
+		void SetSpecularTexture(Texture* pTexture);
+		void SetGlossinessTexture(Texture* pTexture);
 		void SetPosition(float x, float y, float z);
 		void SetRotation(float pitch, float yaw, float roll);
 		void SetScale(const Vector3& scale);
@@ -52,6 +55,9 @@ namespace dae
 		uint32_t m_NumIndices{};
 
 		Texture* m_pDiffuseTexture{};
+		Texture* m_pNormalTexture{};
+		Texture* m_pSpecularTexture{};
+		Texture* m_pGlossTexture{};
 
 		Vector3 m_Position{ 0.f, 0.f, 0.f };
 		Vector3 m_Rotation{ 0.f, 0.f, 0.f };

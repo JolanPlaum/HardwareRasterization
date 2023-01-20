@@ -91,8 +91,7 @@ namespace dae
 
 								// Optional vertex normal
 								file >> iNormal;
-								//TODO: uncomment code once normal is added to Vertex struct
-								//vertex.normal = normals[iNormal - 1];
+								vertex.normal = normals[iNormal - 1];
 							}
 						}
 
@@ -137,25 +136,22 @@ namespace dae
 				const Vector2 diffY = Vector2(uv1.y - uv0.y, uv2.y - uv0.y);
 				float r = 1.f / Vector2::Cross(diffX, diffY);
 
-				//TODO: uncomment code once tangent is added to Vertex struct
-				//Vector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
-				//vertices[index0].tangent += tangent;
-				//vertices[index1].tangent += tangent;
-				//vertices[index2].tangent += tangent;
+				Vector3 tangent = (edge0 * diffY.y - edge1 * diffY.x) * r;
+				vertices[index0].tangent += tangent;
+				vertices[index1].tangent += tangent;
+				vertices[index2].tangent += tangent;
 			}
 
 			//Create the Tangents (reject)
 			for (auto& v : vertices)
 			{
-				//TODO: uncomment code once tangent and normal are added to Vertex struct
-				//v.tangent = Vector3::Reject(v.tangent, v.normal).Normalized();
+				v.tangent = Vector3::Reject(v.tangent, v.normal).Normalized();
 
 				if(flipAxisAndWinding)
 				{
 					v.position.z *= -1.f;
-					//TODO: uncomment code once tangent and normal are added to Vertex struct
-					//v.normal.z *= -1.f;
-					//v.tangent.z *= -1.f;
+					v.normal.z *= -1.f;
+					v.tangent.z *= -1.f;
 				}
 
 			}

@@ -24,7 +24,7 @@ namespace dae {
 			m_IsInitialized = true;
 			std::cout << "DirectX is initialized and ready!\n";
 
-			m_pScene = Scene_3();
+			m_pScene = Scene_4();
 		}
 		else
 		{
@@ -241,15 +241,15 @@ namespace dae {
 
 		//Create some data for our mesh
 		std::vector<Vertex_PosTex> vertices{
-				{ {	-3,	3,	-2 }, { 0.f,	0.f } },
-				{ {	0,	3,	-2 }, { .5f,	0.f } },
-				{ { 3,	3,	-2 }, { 1.f,	0.f } },
-				{ {	-3,	0,	-2 }, { 0.f,	.5f } },
-				{ { 0,	0,	-2 }, { .5f,	.5f } },
-				{ { 3,	0,	-2 }, { 1.f,	.5f } },
-				{ {	-3,	-3,	-2 }, { 0.f,	1.f } },
-				{ { 0,	-3,	-2 }, { .5f,	1.f } },
-				{ { 3,	-3,	-2 }, { 1.f,	1.f } }
+				{ {	-3,	3,	-2 }, {}, {}, { 0.f,	0.f } },
+				{ {	0,	3,	-2 }, {}, {}, { .5f,	0.f } },
+				{ { 3,	3,	-2 }, {}, {}, { 1.f,	0.f } },
+				{ {	-3,	0,	-2 }, {}, {}, { 0.f,	.5f } },
+				{ { 0,	0,	-2 }, {}, {}, { .5f,	.5f } },
+				{ { 3,	0,	-2 }, {}, {}, { 1.f,	.5f } },
+				{ {	-3,	-3,	-2 }, {}, {}, { 0.f,	1.f } },
+				{ { 0,	-3,	-2 }, {}, {}, { .5f,	1.f } },
+				{ { 3,	-3,	-2 }, {}, {}, { 1.f,	1.f } }
 		};
 		std::vector<uint32_t>indices{
 			3, 0, 1,	1, 4, 3,	4, 1, 2,
@@ -271,12 +271,32 @@ namespace dae {
 
 		//Create data for our mesh
 		std::vector<Vertex_PosTex> vertices{};
-		std::vector<uint32_t>indices{};
+		std::vector<uint32_t> indices{};
 		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
 
 		//Add mesh to the scene
 		m_pMeshRotating = scene->AddMesh(m_pDevice, vertices, indices);
 		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
+
+		return scene;
+	}
+
+	Scene* Renderer::Scene_4()
+	{
+		//Instantiate the scene
+		Scene* scene = new Scene(Camera({ 0.f, 0.f, -50.f }, 45.f, m_Width / (float)m_Height));
+
+		//Create data for our mesh
+		std::vector<Vertex_PosTex> vertices{};
+		std::vector<uint32_t> indices{};
+		Utils::ParseOBJ("Resources/vehicle.obj", vertices, indices);
+
+		//Add mesh to the scene
+		m_pMeshRotating = scene->AddMesh(m_pDevice, vertices, indices);
+		m_pMeshRotating->SetDiffuseTexture(new Texture(m_pDevice, "Resources/vehicle_diffuse.png"));
+		m_pMeshRotating->SetNormalTexture(new Texture(m_pDevice, "Resources/vehicle_normal.png"));
+		m_pMeshRotating->SetSpecularTexture(new Texture(m_pDevice, "Resources/vehicle_specular.png"));
+		m_pMeshRotating->SetGlossinessTexture(new Texture(m_pDevice, "Resources/vehicle_gloss.png"));
 
 		return scene;
 	}

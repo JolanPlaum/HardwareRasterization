@@ -14,8 +14,11 @@ using namespace dae;
 //-----------------------------------------------------------------
 Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile, bool usesTexture)
 {
+	//Load Effect
 	m_pEffect = LoadEffect(pDevice, assetFile);
 
+	
+	//Load Techniques
 	m_pTechniquePoint = m_pEffect->GetTechniqueByName("DefaultTechnique");
 	if (!m_pTechniquePoint->IsValid())
 		std::wcout << L"DefaultTechnique not valid\n";
@@ -28,15 +31,39 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile, bool usesTe
 	if (!m_pTechniqueAnisotropic->IsValid())
 		std::wcout << L"AnisotropicTechnique not valid\n";
 
+	m_pTechnique = m_pTechniquePoint;
+
+
+	//Load Matrices
 	m_pMatWorldViewProjVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 	if (!m_pMatWorldViewProjVariable->IsValid())
-		std::wcout << L"Matrix Variable not valid\n";
+		std::wcout << L"Matrix Variable gWorldViewProj not valid\n";
 
+	m_pMatWorldVariable = m_pEffect->GetVariableByName("gWorld")->AsMatrix();
+	if (!m_pMatWorldVariable->IsValid())
+		std::wcout << L"Matrix Variable gWorld not valid\n";
+
+	m_pMatInvViewVariable = m_pEffect->GetVariableByName("gInvView")->AsMatrix();
+	if (!m_pMatInvViewVariable->IsValid())
+		std::wcout << L"Matrix Variable gInvView not valid\n";
+
+
+	//Load Textures
 	m_pDiffuseMapVariable = m_pEffect->GetVariableByName("gDiffuseMap")->AsShaderResource();
 	if (!m_pDiffuseMapVariable->IsValid())
-		std::wcout << L"Shader Resource Variable not valid\n";
+		std::wcout << L"Shader Resource gDiffuseMap Variable not valid\n";
 
-	m_pTechnique = m_pTechniquePoint;
+	m_pNormalMapVariable = m_pEffect->GetVariableByName("gNormalMap")->AsShaderResource();
+	if (!m_pNormalMapVariable->IsValid())
+		std::wcout << L"Shader Resource gNormalMap Variable not valid\n";
+
+	m_pSpecularMapVariable = m_pEffect->GetVariableByName("gSpecularMap")->AsShaderResource();
+	if (!m_pSpecularMapVariable->IsValid())
+		std::wcout << L"Shader Resource gSpecularMap Variable not valid\n";
+
+	m_pGlossMapVariable = m_pEffect->GetVariableByName("gGlossMap")->AsShaderResource();
+	if (!m_pGlossMapVariable->IsValid())
+		std::wcout << L"Shader Resource gGlossMap Variable not valid\n";
 
 
 	//Create Vertex Layout
@@ -159,7 +186,7 @@ uint32_t Effect::CreateColorVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc)
 
 uint32_t Effect::CreateTextureVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc)
 {
-	static constexpr uint32_t numElements{ 2 };
+	static constexpr uint32_t numElements{ 4 };
 	vertexDesc = new D3D11_INPUT_ELEMENT_DESC[numElements]{};
 
 	vertexDesc[0].SemanticName = "POSITION";
@@ -167,10 +194,20 @@ uint32_t Effect::CreateTextureVertexLayout(D3D11_INPUT_ELEMENT_DESC*& vertexDesc
 	vertexDesc[0].AlignedByteOffset = 0;
 	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-	vertexDesc[1].SemanticName = "TEXCOORD";
-	vertexDesc[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	vertexDesc[1].SemanticName = "NORMAL";
+	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	vertexDesc[1].AlignedByteOffset = 12;
 	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	vertexDesc[2].SemanticName = "TANGENT";
+	vertexDesc[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	vertexDesc[2].AlignedByteOffset = 24;
+	vertexDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	vertexDesc[3].SemanticName = "TEXCOORD";
+	vertexDesc[3].Format = DXGI_FORMAT_R32G32_FLOAT;
+	vertexDesc[3].AlignedByteOffset = 36;
+	vertexDesc[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	return numElements;
 }
@@ -204,13 +241,29 @@ void Effect::SetWorldViewProjectionMatrix(Matrix& pMatrix)
 		std::wcout << L"SetWorldViewProjectionMatrix failed\n";
 }
 
-void Effect::SetDiffuseMap(Texture* pDiffuseTexture)
+void Effect::SetWorldMatrix(Matrix& pMatrix)
 {
-	if (pDiffuseTexture)
+	if (m_pMatWorldVariable)
+		m_pMatWorldVariable->SetMatrix(reinterpret_cast<float*>(&pMatrix));
+	else
+		std::wcout << L"SetWorldMatrix failed\n";
+}
+
+void Effect::SetInverseViewMatrix(Matrix& pMatrix)
+{
+	if (m_pMatInvViewVariable)
+		m_pMatInvViewVariable->SetMatrix(reinterpret_cast<float*>(&pMatrix));
+	else
+		std::wcout << L"SetInverseViewMatrix failed\n";
+}
+
+void Effect::SetDiffuseMap(Texture* pTexture)
+{
+	if (pTexture)
 	{
 		if (m_pDiffuseMapVariable)
 		{
-			const HRESULT result = m_pDiffuseMapVariable->SetResource(pDiffuseTexture->GetResourceView());
+			const HRESULT result = m_pDiffuseMapVariable->SetResource(pTexture->GetResourceView());
 			if (FAILED(result))
 				assert(false);
 		}
@@ -220,6 +273,63 @@ void Effect::SetDiffuseMap(Texture* pDiffuseTexture)
 	else
 	{
 		std::wcout << L"SetDiffuseMap failed: nullptr given\n";
+	}
+}
+
+void Effect::SetNormalMap(Texture* pTexture)
+{
+	if (pTexture)
+	{
+		if (m_pNormalMapVariable)
+		{
+			const HRESULT result = m_pNormalMapVariable->SetResource(pTexture->GetResourceView());
+			if (FAILED(result))
+				assert(false);
+		}
+		else
+			std::wcout << L"SetNormalMap failed\n";
+	}
+	else
+	{
+		std::wcout << L"SetNormalMap failed: nullptr given\n";
+	}
+}
+
+void Effect::SetSpecularMap(Texture* pTexture)
+{
+	if (pTexture)
+	{
+		if (m_pSpecularMapVariable)
+		{
+			const HRESULT result = m_pSpecularMapVariable->SetResource(pTexture->GetResourceView());
+			if (FAILED(result))
+				assert(false);
+		}
+		else
+			std::wcout << L"SetSpecularMap failed\n";
+	}
+	else
+	{
+		std::wcout << L"SetSpecularMap failed: nullptr given\n";
+	}
+}
+
+void Effect::SetGlossinessMap(Texture* pTexture)
+{
+	if (pTexture)
+	{
+		if (m_pGlossMapVariable)
+		{
+			const HRESULT result = m_pGlossMapVariable->SetResource(pTexture->GetResourceView());
+			if (FAILED(result))
+				assert(false);
+		}
+		else
+			std::wcout << L"SetGlossinessMap failed\n";
+	}
+	else
+	{
+		std::wcout << L"SetGlossinessMap failed: nullptr given\n";
 	}
 }
 

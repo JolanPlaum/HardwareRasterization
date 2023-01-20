@@ -116,7 +116,7 @@ void Camera::CalculateViewMatrix()
 		m_Origin
 	};
 
-	m_ViewMatrix = m_InvViewMatrix.Inverse();
+	m_ViewMatrix = Matrix::CreateLookAtLH(m_Origin, m_Forward, Vector3::UnitY);
 }
 
 void Camera::CalculateProjectionMatrix()

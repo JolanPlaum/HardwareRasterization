@@ -49,12 +49,17 @@ void Scene::Update(const Timer* pTimer)
 
 	//Calculate the WorldViewProjection matrix
 	Matrix worldViewProj = m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix();
+	Matrix invView = m_pCamera->GetInverseViewMatrix();
 
 	//Update effects for all meshes
 	for (Mesh* pMesh : m_Meshes)
 	{
-		worldViewProj = pMesh->GetWorldMatrix() * worldViewProj;
+		Matrix world = pMesh->GetWorldMatrix();
+		worldViewProj = world * worldViewProj;
+
 		pMesh->GetEffect()->SetWorldViewProjectionMatrix(worldViewProj);
+		pMesh->GetEffect()->SetWorldMatrix(world);
+		pMesh->GetEffect()->SetInverseViewMatrix(invView);
 	}
 }
 

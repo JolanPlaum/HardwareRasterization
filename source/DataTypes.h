@@ -11,6 +11,8 @@ namespace dae
 	struct Vertex_PosTex
 	{
 		Vector3 position{};
+		Vector3 normal{};
+		Vector3 tangent{};
 		Vector2 uv{};
 	};
 }

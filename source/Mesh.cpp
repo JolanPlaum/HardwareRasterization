@@ -100,6 +100,9 @@ Mesh::~Mesh()
 	delete m_pEffect;
 
 	delete m_pDiffuseTexture;
+	delete m_pNormalTexture;
+	delete m_pSpecularTexture;
+	delete m_pGlossTexture;
 }
 
 
@@ -162,9 +165,27 @@ void Mesh::SetDiffuseTexture(Texture* pTexture)
 	m_pEffect->SetDiffuseMap(m_pDiffuseTexture);
 }
 
+void Mesh::SetNormalTexture(Texture* pTexture)
+{
+	m_pNormalTexture = pTexture;
+	m_pEffect->SetNormalMap(m_pNormalTexture);
+}
+
+void Mesh::SetSpecularTexture(Texture* pTexture)
+{
+	m_pSpecularTexture = pTexture;
+	m_pEffect->SetSpecularMap(m_pSpecularTexture);
+}
+
+void Mesh::SetGlossinessTexture(Texture* pTexture)
+{
+	m_pGlossTexture = pTexture;
+	m_pEffect->SetGlossinessMap(m_pGlossTexture);
+}
+
 void Mesh::SetPosition(float x, float y, float z)
 {
-	m_Rotation = Vector3{ x, y, z };
+	m_Position = Vector3{ x, y, z };
 }
 
 void Mesh::SetRotation(float pitch, float yaw, float roll)

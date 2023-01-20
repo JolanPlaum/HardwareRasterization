@@ -30,7 +30,13 @@ namespace dae
 		void ToggleTechnique();
 
 		void SetWorldViewProjectionMatrix(Matrix& pMatrix);
-		void SetDiffuseMap(Texture* pDiffuseTexture);
+		void SetWorldMatrix(Matrix& pMatrix);
+		void SetInverseViewMatrix(Matrix& pMatrix);
+
+		void SetDiffuseMap(Texture* pTexture);
+		void SetNormalMap(Texture* pTexture);
+		void SetSpecularMap(Texture* pTexture);
+		void SetGlossinessMap(Texture* pTexture);
 
 		ID3DX11Effect* GetEffect() const { return m_pEffect; }
 		ID3DX11EffectTechnique* GetTechnique() const { return m_pTechnique; }
@@ -40,8 +46,11 @@ namespace dae
 	private:
 		// Member variables
 		ID3DX11Effect* m_pEffect{};
-		ID3DX11EffectMatrixVariable* m_pMatWorldViewProjVariable{};
 		ID3D11InputLayout* m_pInputLayout{};
+
+		ID3DX11EffectMatrixVariable* m_pMatWorldViewProjVariable{};
+		ID3DX11EffectMatrixVariable* m_pMatWorldVariable{};
+		ID3DX11EffectMatrixVariable* m_pMatInvViewVariable{};
 
 		ID3DX11EffectTechnique* m_pTechnique{};
 		ID3DX11EffectTechnique* m_pTechniquePoint{};
@@ -49,6 +58,9 @@ namespace dae
 		ID3DX11EffectTechnique* m_pTechniqueAnisotropic{};
 
 		ID3DX11EffectShaderResourceVariable* m_pDiffuseMapVariable{};
+		ID3DX11EffectShaderResourceVariable* m_pNormalMapVariable{};
+		ID3DX11EffectShaderResourceVariable* m_pSpecularMapVariable{};
+		ID3DX11EffectShaderResourceVariable* m_pGlossMapVariable{};
 
 		enum class TechniqueType
 		{
